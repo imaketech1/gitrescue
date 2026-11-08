@@ -1,0 +1,38 @@
+name: eval
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model id (defaults to GITRESCUE_MODEL / built-in default)"
+        required: false
+      repeat:
+        description: "Runs per scenario"
+        required: false
+        default: "1"
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: |
+          git config --global user.name "CI"
+          git config --global user.email "ci@example.com"
+      - run: uv sync --locked
+      - name: Run eval suite against the model
+        env:
+          GITRESCUE_API_KEY: ${{ secrets.GITRESCUE_API_KEY }}
+          GITRESCUE_BASE_URL: ${{ vars.GITRESCUE_BASE_URL }}
+          GITRESCUE_MODEL: ${{ inputs.model || vars.GITRESCUE_MODEL }}
+          GITRESCUE_TRACE_DIR: traces
+        run: uv run gitrescue eval --repeat ${{ inputs.repeat }} -o evals-results/model.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-results
+          path: |
+            evals-results/
+            traces/

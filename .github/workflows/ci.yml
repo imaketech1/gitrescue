@@ -1,0 +1,27 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Configure git identity for fixture repos
+        run: |
+          git config --global user.name "CI"
+          git config --global user.email "ci@example.com"
+          git config --global init.defaultBranch main
+      - run: uv sync --python ${{ matrix.python-version }} --locked
+      - run: uv run pytest
+      - name: Eval harness self-check (scripted oracle, no API key)
+        run: uv run gitrescue eval --reference --no-traces -o evals-results/reference.json
+      - run: uv build

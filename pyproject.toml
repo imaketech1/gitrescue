@@ -1,0 +1,48 @@
+[project]
+name = "gitrescue"
+version = "0.1.0"
+description = "An LLM agent that fixes git mistakes from plain-language requests, safely."
+readme = "README.md"
+authors = [{ name = "Shabana Sultana" }]
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+keywords = ["git", "llm", "agent", "mcp", "cli", "recovery", "guardrails"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Version Control :: Git",
+]
+dependencies = [
+    "mcp>=2.3.0,<3",
+    "openai>=3.42.1",
+    "pydantic>=2.14.2",
+    "rich>=15.0.0",
+    "typer>=0.27.3",
+]
+
+[project.urls]
+Source = "https://github.com/imaketech1/gitrescue"
+Issues = "https://github.com/imaketech1/gitrescue/issues"
+
+[project.scripts]
+gitrescue = "gitrescue.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
