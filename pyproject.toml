@@ -1,5 +1,5 @@
 [project]
-name = "gitrescue"
+name = "gitrescue-agent"
 version = "0.1.0"
 description = "An LLM agent that fixes git mistakes from plain-language requests, safely."
 readme = "README.md"
@@ -46,3 +46,5 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+[tool.uv.build-backend]
+module-name = "gitrescue"
